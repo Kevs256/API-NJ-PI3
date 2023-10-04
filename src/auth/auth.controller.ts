@@ -20,6 +20,7 @@ export class AuthController {
 
     @Delete()
     test3() {
+        console.log("si entro")
         return "delete"
     }
 
