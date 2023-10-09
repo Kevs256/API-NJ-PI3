@@ -5,6 +5,10 @@ import { IsString, IsOptional, IsNotEmpty} from "class-validator";
 export class EditProfileDto{
     @IsString()
     @IsNotEmpty()
+    user_id: string;
+
+    @IsString()
+    @IsNotEmpty()
     user_name: string;
 
     @IsString()

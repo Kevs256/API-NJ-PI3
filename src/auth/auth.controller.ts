@@ -18,7 +18,7 @@ export class AuthController {
         return this.authService.findAll()
     }
 
-    @Delete()
+    @Delete('/delete')
     test3() {
         console.log("si entro")
         return "delete"
