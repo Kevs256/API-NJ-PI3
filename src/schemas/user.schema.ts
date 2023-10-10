@@ -7,15 +7,17 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class User {
 
-    @Prop({ type: String, default: function genUUID() {
-        return uuidv4()
-    }})
+    @Prop({
+        type: String, default: function genUUID() {
+            return uuidv4()
+        }
+    })
     user_id: string
 
-    @Prop()
+    @Prop({ default: 0 })
     user_type: number;
 
-    @Prop()
+    @Prop({ default: 0 })
     user_status: number;
 
     @Prop()
@@ -29,10 +31,10 @@ export class User {
     @Prop()
     password: string;
 
-    @Prop()
+    @Prop({ default: 0 })
     intSeguidores: number;
 
-    @Prop()
+    @Prop({ default: 0 })
     intSeguidos: number;
 
     @Prop()
@@ -46,6 +48,10 @@ export class User {
 
     @Prop()
     recoveriCode: string;
+
+    @Prop({ default: 0 })
+    NumberRoutes: number;
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

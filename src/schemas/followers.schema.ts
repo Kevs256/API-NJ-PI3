@@ -4,12 +4,11 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 @Schema({
     timestamps: true
 })
-export class Following {
+export class Followers {
     @Prop()
     user_id: string; // Supongo que estos son identificadores únicos para usuarios
-    @Prop({type:[String], unique:true})
-    following_id: string[]
+    @Prop([String])
+    follower_id: string[]
 }
 
-export const FollowingSchema = SchemaFactory.createForClass(Following);
-
+export const FollowersSchema = SchemaFactory.createForClass(Followers);

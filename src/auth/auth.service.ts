@@ -69,10 +69,10 @@ export class AuthService {
     }
 
     saveRecoveriCode(id_user: string, recoveriCode: number) {
-        recoveriCode: recoveriCode;
         return this.userModel.findOneAndUpdate({ id_user: id_user }, { recoveriCode: recoveriCode });
     }
 
     //servicio de enviar correo electronico
+    //servicio de ingreso con huella
 
 }
