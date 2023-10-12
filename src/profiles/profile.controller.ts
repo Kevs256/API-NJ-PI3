@@ -6,6 +6,8 @@ import { InfoProfileDto } from 'src/dto/infoProfile.dto';
 import { User } from 'src/schemas/user.schema';
 import { FollowDto } from 'src/dto/follow.dto';
 import { AuthService } from '../auth/auth.service';
+import { InfoProfileTileDto } from 'src/dto/infoProfileTile.dto';
+import { info } from 'console';
 
 @Controller('profile')
 export class ProfileController {
@@ -45,7 +47,7 @@ export class ProfileController {
             infoProfileDto.intSeguidos = User.intSeguidos;
             infoProfileDto.NumberRoutes = User.NumberRoutes;
 
-            return {infoProfileDto, isFollowing:"true"}
+            return { infoProfileDto, isFollowing: "true" }
         } catch (error) {
             if (error.status === HttpStatus.NOT_FOUND) {
                 throw new HttpException('No encontrado', HttpStatus.NOT_FOUND);
@@ -107,9 +109,82 @@ export class ProfileController {
         const UserVerifiFollowing = await this.profileService.findOneFollowingUsers(body);
         const UserVerifiFollower = await this.profileService.findOneFollowerUsers(body);
         if (!UserVerifiFollowing && !UserVerifiFollower) {
-            return {isFollowing:"false"}
-        }else{
-            return {isFollowing:"true"}
+            return { isFollowing: "false" }
+        } else {
+            return { isFollowing: "true" }
         }
     }
+
+    //metodo de contar cuantos seguidores tiene un usuario
+    @Get('/follows/:id')
+    async countFollowers(@Param('id') user_id: string) {
+        const user1 = await this.profileService.findOneFollowing(user_id);
+        const user2 = await this.profileService.findOneFollower(user_id);
+
+        var followers = 0;
+        var following = 0;
+        try {
+            if (!user1 && !user2) {
+                return new HttpException('No encontrado', HttpStatus.NOT_FOUND);
+            } else {
+                if (user1 && user1.following_id.length) {
+                    following = user1.following_id.length
+                } else {
+                    following = 0
+                }
+
+                if (user2 && user2.follower_id.length) {
+                    followers = user2.follower_id.length
+                } else {
+                    followers = 0
+                }
+                return { followers, following, statusCode: 200 }
+            }
+        } catch (error) {
+            if (error.status === HttpStatus.NOT_FOUND) {
+                throw new HttpException('No encontrado', HttpStatus.NOT_FOUND);
+            }
+            throw new HttpException('Error interno del servidor', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //search profile name
+    @Get('/search/:name')
+    async searchProfile(@Param('name') name: string) {
+        try {
+            const allProfiles: User[] = await this.profileService.searchProfiles();
+
+            const infoProfiles: InfoProfileTileDto[] = allProfiles.map((profile) => {
+                const infoProfile = new InfoProfileTileDto();
+                infoProfile.user_id = profile.user_id;
+                infoProfile.user_name = profile.user_name;
+                infoProfile.imgProfile = profile.imgProfile; // Si imgProfile no existe, esto será undefined en el DTO
+
+                return infoProfile;
+            });
+
+            const arrayNameProfiles = infoProfiles.map((profile) => profile.user_name);
+
+            const coincidencias = await this.profileService.namesCoincidences(name, arrayNameProfiles)
+
+            const perfilesFiltrados = infoProfiles.filter((perfil) =>
+                coincidencias.some((nombreObjetivo) => nombreObjetivo.target === perfil.user_name)
+            );
+
+            if (perfilesFiltrados.length == 0) {
+                throw new HttpException('No hubo coincidencias', HttpStatus.NOT_FOUND);
+            }
+
+            return { perfilesFiltrados, statusCode: 200 }
+
+        } catch (error) {
+            if (error.status === HttpStatus.NOT_FOUND) {
+                throw new HttpException('No hubo coincidencias', HttpStatus.NOT_FOUND);
+            }
+            throw new HttpException('Error interno del servidor', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
+    }
+
 }
