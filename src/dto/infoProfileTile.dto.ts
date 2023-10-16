@@ -1,4 +1,5 @@
-import { IsString, IsOptional, IsNotEmpty, IsNumber} from "class-validator";
+/* eslint-disable prettier/prettier */
+import { IsString, IsOptional, IsNotEmpty} from "class-validator";
 export class InfoProfileTileDto{
     @IsString()
     @IsNotEmpty()

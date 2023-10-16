@@ -8,8 +8,7 @@ import { EditProfileDto } from 'src/dto/editProfile.dto';
 import { Following } from 'src/schemas/following.schema';
 import { Followers } from 'src/schemas/followers.schema';
 import { FollowDto } from 'src/dto/follow.dto';
-import { InfoProfileDto } from 'src/dto/infoProfile.dto';
-var stringSimilarity = require("string-similarity");
+import stringSimilarity from "string-similarity";
 
 @Injectable()
 export class ProfileService {
@@ -78,7 +77,7 @@ export class ProfileService {
     }
 
     namesCoincidences(name:string, arrayProfiles : string[]){
-        var matches = stringSimilarity.findBestMatch(name, arrayProfiles);
+        const matches = stringSimilarity.findBestMatch(name, arrayProfiles);
         return matches.ratings.filter(match => match.rating > 0.5);
     }
 }

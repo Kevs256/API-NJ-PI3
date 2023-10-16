@@ -7,7 +7,6 @@ import { User } from 'src/schemas/user.schema';
 import { FollowDto } from 'src/dto/follow.dto';
 import { AuthService } from '../auth/auth.service';
 import { InfoProfileTileDto } from 'src/dto/infoProfileTile.dto';
-import { info } from 'console';
 
 @Controller('profile')
 export class ProfileController {
@@ -121,8 +120,8 @@ export class ProfileController {
         const user1 = await this.profileService.findOneFollowing(user_id);
         const user2 = await this.profileService.findOneFollower(user_id);
 
-        var followers = 0;
-        var following = 0;
+        let followers = 0;
+        let following = 0;
         try {
             if (!user1 && !user2) {
                 return new HttpException('No encontrado', HttpStatus.NOT_FOUND);
