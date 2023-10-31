@@ -41,7 +41,7 @@ export class ImagesController {
     //send image by id
     @Get('/imgProf/:id')
     @Header('Content-Type', 'image/jpeg')
-    @Header('Content-Disposition', 'attachment; filename="user_image.jpg"')
+    @Header('Content-Disposition', 'inline')
     async getImageProfile(@Param('id') user_id: string){
         try {
             const User = await this.authService.findOne(user_id)
